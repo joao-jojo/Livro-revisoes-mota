@@ -39,7 +39,16 @@ nav div{width:min(680px,100%);display:grid;grid-template-columns:1fr 1fr 1fr}nav
 </section>
 <section id="revision" class="view"><div class="card"><h2 id="revTitle" style="margin-top:0">Registo de Revisão</h2><div class="grid2"><div><label>Data</label><input id="date" type="date"></div><div><label>Quilometragem</label><input id="km" type="number"></div></div><label>Oficina / Técnico</label><input id="tech"><div class="grid2"><div><label>Próxima revisão — km</label><input id="nextKm" type="number"></div><div><label>Próxima revisão — data</label><input id="nextDate" type="date"></div></div></div>
 <h3 class="section-title">Trabalhos efetuados</h3><div class="card" id="works"></div><h3 class="section-title">Peças, materiais e referências</h3><div class="card"><div id="parts"></div><button class="ghost" onclick="addPart()">＋ Adicionar peça/material</button></div><h3 class="section-title">Observações</h3><div class="card"><textarea id="notes" placeholder="Observações sobre a revisão..."></textarea></div><button class="primary" id="saveBtn" onclick="saveRevision()">Guardar revisão</button></section>
-<section id="history" class="view"><h2>Histórico de revisões</h2><div class="card" id="historyList"></div></section>
+<section id="history" class="view"><h2>Histórico de revisões</h2>
+<div class="card">
+<h3 style="margin-top:0">Cópia de segurança</h3>
+<p class="muted">Guarda os dados da mota e todas as revisões num ficheiro de segurança.</p>
+<button class="primary" onclick="createBackup()">Criar cópia de segurança</button>
+<button class="ghost" style="margin-top:10px;width:100%" onclick="$('restoreFile').click()">Restaurar cópia</button>
+<input id="restoreFile" type="file" accept=".json,application/json" style="display:none" onchange="restoreBackup(event)">
+<div id="backupMsg" class="muted" style="margin-top:10px"></div>
+</div>
+<div class="card" id="historyList"></div></section>
 </main><nav><div><button onclick="show('home')"><span>⌂</span>Início</button><button onclick="newRevision()"><span>＋</span>Revisão</button><button onclick="show('history')"><span>☷</span>Histórico</button></div></nav></div>
 <script>
 const workItems=["Óleo do motor","Filtro de óleo","Filtro de ar","Velas","Travões","Pneus","Corrente / transmissão","Líquido de refrigeração","Líquido de travões","Suspensão / direção","Bateria / sistema elétrico"];
@@ -56,5 +65,33 @@ function newRevision(){editing=null;let d=data(),no=d.revisions.length+1;$("revT
 function editRevision(i){let d=data(),r=d.revisions[i];if(!r)return;editing=i;$("revTitle").textContent="Editar Revisão "+String(r.no||i+1).padStart(2,"0");$("saveBtn").textContent="Guardar alterações";$("date").value=r.date||"";$("km").value=r.km||"";$("tech").value=r.tech||"";$("nextKm").value=r.nextKm||"";$("nextDate").value=r.nextDate||"";$("notes").value=r.notes||"";buildWorks(r.works||{});$("parts").innerHTML="";(r.parts&&r.parts.length?r.parts:[{name:"",ref:""}]).forEach(p=>addPart(p.name,p.ref));show("revision")}
 function saveRevision(){let d=data(),works={};document.querySelectorAll("[data-work]:checked").forEach(c=>(works[c.dataset.work]??=[]).push(c.dataset.action));let names=[...document.querySelectorAll(".pname")],refs=[...document.querySelectorAll(".pref")];let parts=names.map((x,i)=>({name:x.value,ref:refs[i].value})).filter(x=>x.name||x.ref);let no=editing!==null?(d.revisions[editing]?.no||editing+1):d.revisions.length+1;let r={no,date:$("date").value,km:$("km").value,tech:$("tech").value,nextKm:$("nextKm").value,nextDate:$("nextDate").value,works,parts,notes:$("notes").value};if(editing!==null)d.revisions[editing]=r;else d.revisions.push(r);if(r.km&&(!d.bike.km||+r.km>+d.bike.km))d.bike.km=r.km;put(d);editing=null;renderHome();show("history")}
 function renderHistory(){let d=data(),rows=d.revisions.map((x,i)=>({x,i})).reverse();$("historyList").innerHTML=rows.length?rows.map(({x,i})=>`<div class="revision" onclick="editRevision(${i})"><div><strong>Revisão ${String(x.no||i+1).padStart(2,"0")}</strong><span class="muted">${x.date||"Sem data"} · ${x.km||"—"} km<br>${x.tech||""}</span></div><span class="badge">Abrir / Editar</span></div>`).join(""):'<span class="muted">Ainda não existem revisões.</span>'}
+
+function createBackup(){
+ try{
+  let d=data(),backup={app:"Livro de Revisões - QJ MOTOR SRT 600SX",version:1,createdAt:new Date().toISOString(),data:d};
+  let blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"}),a=document.createElement("a");
+  let url=URL.createObjectURL(blob);a.href=url;a.download="livro-revisoes-backup-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  $("backupMsg").textContent="Cópia de segurança criada. Guarda o ficheiro num local seguro.";
+ }catch(e){$("backupMsg").textContent="Não foi possível criar a cópia de segurança."}
+}
+function restoreBackup(ev){
+ let file=ev.target.files&&ev.target.files[0];if(!file)return;
+ let reader=new FileReader();
+ reader.onload=function(){
+  try{
+   let parsed=JSON.parse(reader.result),restored=parsed&&parsed.data?parsed.data:parsed;
+   if(!restored||typeof restored!=="object"||!Array.isArray(restored.revisions)||!restored.bike)throw new Error("Formato inválido");
+   let count=restored.revisions.length;
+   if(!confirm("Restaurar esta cópia com "+count+" revisão(ões)? Os dados atuais serão substituídos.")){ev.target.value="";return}
+   put(restored);editing=null;renderHome();renderHistory();
+   $("backupMsg").textContent="Cópia restaurada com sucesso: "+count+" revisão(ões).";
+  }catch(e){$("backupMsg").textContent="Ficheiro de cópia de segurança inválido ou danificado."}
+  ev.target.value="";
+ };
+ reader.onerror=function(){$("backupMsg").textContent="Não foi possível ler o ficheiro.";ev.target.value=""};
+ reader.readAsText(file);
+}
+
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");renderHome();
 </script></body></html>
