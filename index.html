@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Livro de Manutenção</title>
 <style>
-:root{--bg:#f4f5f3;--card:#fff;--ink:#202220;--muted:#737873;--line:#e3e6e2;--dark:#171a17;--accent:#343a34}
+:root{--bg:#f4f5f3;--card:#fff;--ink:#202220;--muted:#737873;--line:#e3e6e2;--dark:#171a17}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 .app{max-width:680px;margin:auto;min-height:100vh;padding-bottom:88px}
 header{background:var(--dark);color:#fff;padding:24px 20px 20px;position:sticky;top:0;z-index:5}
@@ -20,79 +20,41 @@ main{padding:16px}.card{background:var(--card);border:1px solid var(--line);bord
 .hero h2{margin:0 0 4px;font-size:21px}.muted{color:var(--muted);font-size:14px}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.stat{background:#f7f8f6;border-radius:12px;padding:12px}.stat b{display:block;font-size:19px;margin-top:3px}
 button{border:0;border-radius:12px;padding:13px 15px;font-weight:700;font-size:15px;cursor:pointer}.primary{background:var(--dark);color:#fff;width:100%}.ghost{background:#eef0ed;color:var(--ink)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .view{display:none}.view.active{display:block}
 label{display:block;font-size:13px;color:var(--muted);margin:13px 0 6px}input,textarea{width:100%;padding:12px;border:1px solid #d9ddd8;border-radius:10px;font:inherit;background:#fff}textarea{min-height:80px;resize:vertical}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.section-title{font-size:19px;margin:22px 0 10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.section-title{font-size:19px;margin:22px 0 10px}
 .work{border-top:1px solid var(--line);padding:13px 0}.work:first-of-type{border-top:0}.work b{display:block;margin-bottom:9px}
 .checks{display:flex;gap:7px;flex-wrap:wrap}.check{border:1px solid #d8dcd7;border-radius:9px;padding:8px 9px;font-size:13px;background:#fafbfa}.check input{width:auto;margin-right:4px}
 .part{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.revision{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line)}.revision:last-child{border:0}.revision strong{display:block}.badge{font-size:12px;background:#eef0ed;border-radius:999px;padding:5px 8px}
+.revision{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer}.revision:last-child{border:0}.revision strong{display:block}.badge{font-size:12px;background:#eef0ed;border-radius:999px;padding:5px 8px}
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;z-index:10}
-nav div{width:min(680px,100%);display:grid;grid-template-columns:1fr 1fr 1fr}
-nav button{background:#fff;border-radius:0;padding:12px 4px;font-size:12px;color:#5f655f}nav button span{display:block;font-size:21px;margin-bottom:2px}
-@media(max-width:430px){.grid2{grid-template-columns:1fr}.part{grid-template-columns:1fr}.checks{gap:5px}.check{font-size:12px;padding:8px 7px}}
-</style>
-</head>
-<body>
-<div class="app">
-<header><small>LIVRO DIGITAL</small><h1>Manutenção da Mota</h1></header>
-<main>
+nav div{width:min(680px,100%);display:grid;grid-template-columns:1fr 1fr 1fr}nav button{background:#fff;border-radius:0;padding:12px 4px;font-size:12px;color:#5f655f}nav button span{display:block;font-size:21px;margin-bottom:2px}
+@media(max-width:430px){.grid2,.part{grid-template-columns:1fr}.checks{gap:5px}.check{font-size:12px;padding:8px 7px}}
+</style></head><body>
+<div class="app"><header><small>LIVRO DIGITAL</small><h1>Manutenção da Mota</h1></header><main>
 <section id="home" class="view active">
-  <div class="card hero">
-    <h2 id="bikeName">A minha mota</h2><div class="muted" id="bikeMeta">Configura os dados da tua mota</div>
-    <div class="stats"><div class="stat"><span class="muted">Quilometragem</span><b id="kmNow">— km</b></div><div class="stat"><span class="muted">Revisões</span><b id="revCount">0</b></div></div>
-  </div>
-  <button class="primary" onclick="newRevision()">＋ Nova revisão</button>
-  <h3 class="section-title">Últimas revisões</h3><div class="card" id="recent"><span class="muted">Ainda não existem revisões.</span></div>
-  <h3 class="section-title">Dados da mota</h3>
-  <div class="card">
-    <label>Marca e modelo</label><input id="bike" placeholder="Ex.: QJ MOTOR SRT 600SX">
-    <div class="grid2"><div><label>Matrícula</label><input id="plate"></div><div><label>Quilometragem atual</label><input id="currentKm" type="number"></div></div>
-    <button class="ghost" style="margin-top:12px;width:100%" onclick="saveBike()">Guardar dados</button>
-  </div>
+<div class="card hero"><h2 id="bikeName">A minha mota</h2><div class="muted" id="bikeMeta">Configura os dados da tua mota</div><div class="stats"><div class="stat"><span class="muted">Quilometragem</span><b id="kmNow">— km</b></div><div class="stat"><span class="muted">Revisões</span><b id="revCount">0</b></div></div></div>
+<button class="primary" onclick="newRevision()">＋ Nova revisão</button><h3 class="section-title">Últimas revisões</h3><div class="card" id="recent"></div>
+<h3 class="section-title">Dados da mota</h3><div class="card"><label>Marca e modelo</label><input id="bike" placeholder="Ex.: QJ MOTOR SRT 600SX"><div class="grid2"><div><label>Matrícula</label><input id="plate"></div><div><label>Quilometragem atual</label><input id="currentKm" type="number"></div></div><button class="ghost" style="margin-top:12px;width:100%" onclick="saveBike()">Guardar dados</button></div>
 </section>
-
-<section id="revision" class="view">
-  <div class="card"><h2 id="revTitle" style="margin-top:0">Registo de Revisão</h2>
-    <div class="grid2"><div><label>Data</label><input id="date" type="date"></div><div><label>Quilometragem</label><input id="km" type="number"></div></div>
-    <label>Oficina / Técnico</label><input id="tech">
-    <div class="grid2"><div><label>Próxima revisão — km</label><input id="nextKm" type="number"></div><div><label>Próxima revisão — data</label><input id="nextDate" type="date"></div></div>
-  </div>
-  <h3 class="section-title">Trabalhos efetuados</h3>
-  <div class="card" id="works"></div>
-  <h3 class="section-title">Peças, materiais e referências</h3>
-  <div class="card"><div id="parts"></div><button class="ghost" onclick="addPart()">＋ Adicionar peça/material</button></div>
-  <h3 class="section-title">Observações</h3><div class="card"><textarea id="notes" placeholder="Observações sobre a revisão..."></textarea></div>
-  <button class="primary" onclick="saveRevision()">Guardar revisão</button>
-</section>
-
-<section id="history" class="view">
-  <h2>Histórico de revisões</h2><div class="card" id="historyList"></div>
-</section>
-</main>
-<nav><div>
-<button onclick="show('home')"><span>⌂</span>Início</button>
-<button onclick="newRevision()"><span>＋</span>Revisão</button>
-<button onclick="show('history')"><span>☷</span>Histórico</button>
-</div></nav>
-</div>
+<section id="revision" class="view"><div class="card"><h2 id="revTitle" style="margin-top:0">Registo de Revisão</h2><div class="grid2"><div><label>Data</label><input id="date" type="date"></div><div><label>Quilometragem</label><input id="km" type="number"></div></div><label>Oficina / Técnico</label><input id="tech"><div class="grid2"><div><label>Próxima revisão — km</label><input id="nextKm" type="number"></div><div><label>Próxima revisão — data</label><input id="nextDate" type="date"></div></div></div>
+<h3 class="section-title">Trabalhos efetuados</h3><div class="card" id="works"></div><h3 class="section-title">Peças, materiais e referências</h3><div class="card"><div id="parts"></div><button class="ghost" onclick="addPart()">＋ Adicionar peça/material</button></div><h3 class="section-title">Observações</h3><div class="card"><textarea id="notes" placeholder="Observações sobre a revisão..."></textarea></div><button class="primary" id="saveBtn" onclick="saveRevision()">Guardar revisão</button></section>
+<section id="history" class="view"><h2>Histórico de revisões</h2><div class="card" id="historyList"></div></section>
+</main><nav><div><button onclick="show('home')"><span>⌂</span>Início</button><button onclick="newRevision()"><span>＋</span>Revisão</button><button onclick="show('history')"><span>☷</span>Histórico</button></div></nav></div>
 <script>
 const workItems=["Óleo do motor","Filtro de óleo","Filtro de ar","Velas","Travões","Pneus","Corrente / transmissão","Líquido de refrigeração","Líquido de travões","Suspensão / direção","Bateria / sistema elétrico"];
-let editing=null;
-const $=id=>document.getElementById(id);
+let editing=null; const $=id=>document.getElementById(id);
 function data(){return JSON.parse(localStorage.getItem("motoBook")||'{"bike":{},"revisions":[]}')}
 function put(d){localStorage.setItem("motoBook",JSON.stringify(d))}
-function show(id){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$(id).classList.add("active"); if(id==="history") renderHistory(); window.scrollTo(0,0)}
+function show(id){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");if(id==="history")renderHistory();window.scrollTo(0,0)}
 function saveBike(){let d=data();d.bike={name:$("bike").value,plate:$("plate").value,km:$("currentKm").value};put(d);renderHome()}
-function renderHome(){let d=data(),b=d.bike||{};$("bike").value=b.name||"";$("plate").value=b.plate||"";$("currentKm").value=b.km||"";$("bikeName").textContent=b.name||"A minha mota";$("bikeMeta").textContent=b.plate||"Configura os dados da tua mota";$("kmNow").textContent=(b.km?Number(b.km).toLocaleString("pt-PT"):"—")+" km";$("revCount").textContent=d.revisions.length; let r=[...d.revisions].reverse().slice(0,3);$("recent").innerHTML=r.length?r.map(x=>`<div class="revision"><div><strong>Revisão ${String(x.no).padStart(2,"0")}</strong><span class="muted">${x.date||"Sem data"} · ${x.km||"—"} km</span></div><span class="badge">Ver ficha</span></div>`).join(""):'<span class="muted">Ainda não existem revisões.</span>'}
+function renderHome(){let d=data(),b=d.bike||{};$("bike").value=b.name||"";$("plate").value=b.plate||"";$("currentKm").value=b.km||"";$("bikeName").textContent=b.name||"A minha mota";$("bikeMeta").textContent=b.plate||"Configura os dados da tua mota";$("kmNow").textContent=(b.km?Number(b.km).toLocaleString("pt-PT"):"—")+" km";$("revCount").textContent=d.revisions.length;let rows=d.revisions.map((x,i)=>({x,i})).reverse().slice(0,3);$("recent").innerHTML=rows.length?rows.map(({x,i})=>`<div class="revision" onclick="editRevision(${i})"><div><strong>Revisão ${String(x.no||i+1).padStart(2,"0")}</strong><span class="muted">${x.date||"Sem data"} · ${x.km||"—"} km</span></div><span class="badge">Abrir / Editar</span></div>`).join(""):'<span class="muted">Ainda não existem revisões.</span>'}
 function buildWorks(vals={}){$("works").innerHTML=workItems.map((n,i)=>`<div class="work"><b>${n}</b><div class="checks">${["Verificado","Ajustado","Substituído"].map(k=>`<label class="check"><input type="checkbox" data-work="${i}" data-action="${k}" ${vals[i]?.includes(k)?"checked":""}>${k}</label>`).join("")}</div></div>`).join("")}
-function addPart(name="",ref=""){$("parts").insertAdjacentHTML("beforeend",`<div class="part"><input class="pname" placeholder="Peça / material" value="${name}"><input class="pref" placeholder="Marca / referência" value="${ref}"></div>`)}
-function newRevision(){editing=null;let d=data(),no=d.revisions.length+1;$("revTitle").textContent="Registo de Revisão "+String(no).padStart(2,"0");["date","km","tech","nextKm","nextDate","notes"].forEach(i=>$(i).value="");$("date").value=new Date().toISOString().slice(0,10);buildWorks();$("parts").innerHTML="";addPart();show("revision")}
-function saveRevision(){let d=data(), works={};document.querySelectorAll("[data-work]:checked").forEach(c=>(works[c.dataset.work]??=[]).push(c.dataset.action));let names=[...document.querySelectorAll(".pname")],refs=[...document.querySelectorAll(".pref")];let parts=names.map((x,i)=>({name:x.value,ref:refs[i].value})).filter(x=>x.name||x.ref);let r={no:d.revisions.length+1,date:$("date").value,km:$("km").value,tech:$("tech").value,nextKm:$("nextKm").value,nextDate:$("nextDate").value,works,parts,notes:$("notes").value};d.revisions.push(r);if(r.km && (!d.bike.km || +r.km>+d.bike.km))d.bike.km=r.km;put(d);renderHome();show("home")}
-function renderHistory(){let r=[...data().revisions].reverse();$("historyList").innerHTML=r.length?r.map(x=>`<div class="revision"><div><strong>Revisão ${String(x.no).padStart(2,"0")}</strong><span class="muted">${x.date||"Sem data"} · ${x.km||"—"} km<br>${x.tech||""}</span></div><span class="badge">${Object.values(x.works||{}).flat().length} ações</span></div>`).join(""):'<span class="muted">Ainda não existem revisões.</span>'}
-if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");
-renderHome();
-</script>
-</body></html>
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function addPart(name="",ref=""){$("parts").insertAdjacentHTML("beforeend",`<div class="part"><input class="pname" placeholder="Peça / material" value="${esc(name)}"><input class="pref" placeholder="Marca / referência" value="${esc(ref)}"></div>`)}
+function newRevision(){editing=null;let d=data(),no=d.revisions.length+1;$("revTitle").textContent="Registo de Revisão "+String(no).padStart(2,"0");$("saveBtn").textContent="Guardar revisão";["date","km","tech","nextKm","nextDate","notes"].forEach(i=>$(i).value="");$("date").value=new Date().toISOString().slice(0,10);buildWorks();$("parts").innerHTML="";addPart();show("revision")}
+function editRevision(i){let d=data(),r=d.revisions[i];if(!r)return;editing=i;$("revTitle").textContent="Editar Revisão "+String(r.no||i+1).padStart(2,"0");$("saveBtn").textContent="Guardar alterações";$("date").value=r.date||"";$("km").value=r.km||"";$("tech").value=r.tech||"";$("nextKm").value=r.nextKm||"";$("nextDate").value=r.nextDate||"";$("notes").value=r.notes||"";buildWorks(r.works||{});$("parts").innerHTML="";(r.parts&&r.parts.length?r.parts:[{name:"",ref:""}]).forEach(p=>addPart(p.name,p.ref));show("revision")}
+function saveRevision(){let d=data(),works={};document.querySelectorAll("[data-work]:checked").forEach(c=>(works[c.dataset.work]??=[]).push(c.dataset.action));let names=[...document.querySelectorAll(".pname")],refs=[...document.querySelectorAll(".pref")];let parts=names.map((x,i)=>({name:x.value,ref:refs[i].value})).filter(x=>x.name||x.ref);let no=editing!==null?(d.revisions[editing]?.no||editing+1):d.revisions.length+1;let r={no,date:$("date").value,km:$("km").value,tech:$("tech").value,nextKm:$("nextKm").value,nextDate:$("nextDate").value,works,parts,notes:$("notes").value};if(editing!==null)d.revisions[editing]=r;else d.revisions.push(r);if(r.km&&(!d.bike.km||+r.km>+d.bike.km))d.bike.km=r.km;put(d);editing=null;renderHome();show("history")}
+function renderHistory(){let d=data(),rows=d.revisions.map((x,i)=>({x,i})).reverse();$("historyList").innerHTML=rows.length?rows.map(({x,i})=>`<div class="revision" onclick="editRevision(${i})"><div><strong>Revisão ${String(x.no||i+1).padStart(2,"0")}</strong><span class="muted">${x.date||"Sem data"} · ${x.km||"—"} km<br>${x.tech||""}</span></div><span class="badge">Abrir / Editar</span></div>`).join(""):'<span class="muted">Ainda não existem revisões.</span>'}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");renderHome();
+</script></body></html>
